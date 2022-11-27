@@ -58,6 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
         id: '2', title: 'New Shirt', amount: 75.21, dateTime: DateTime.now()),*/
   ];
 
+  bool _isShowChart = false;
+
   List<Transaction> get _recentTransactions {
     return _userTranscation.where((trx) {
       return trx.dateTime.isAfter(DateTime.now().subtract(Duration(days: 7)));
@@ -125,18 +127,33 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-                height: (MediaQuery.of(context).size.height -
-                        appBar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
-                    0.3,
-                child: Chart(_recentTransactions)),
-            Container(
-                height: (MediaQuery.of(context).size.height -
-                        appBar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
-                    0.7,
-                child: TransactionList(_userTranscation, _deleteTranscation))
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Show Chart'),
+                Switch(
+                    value: _isShowChart,
+                    onChanged: (val) {
+                      setState(() {
+                        _isShowChart = val;
+                      });
+                    }),
+              ],
+            ),
+            _isShowChart
+                ? Container(
+                    height: (MediaQuery.of(context).size.height -
+                            appBar.preferredSize.height -
+                            MediaQuery.of(context).padding.top) *
+                        0.3,
+                    child: Chart(_recentTransactions))
+                : Container(
+                    height: (MediaQuery.of(context).size.height -
+                            appBar.preferredSize.height -
+                            MediaQuery.of(context).padding.top) *
+                        0.7,
+                    child:
+                        TransactionList(_userTranscation, _deleteTranscation))
           ],
         ),
       ),
