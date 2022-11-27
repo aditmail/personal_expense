@@ -56,63 +56,69 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 4.0,
-      child: Container(
-        padding: EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            TextField(
-              autocorrect: false,
-              decoration: InputDecoration(labelText: 'Title'),
-              textInputAction: TextInputAction.next,
-              keyboardType: TextInputType.text,
-              controller: _titleController,
-              onSubmitted: (_) =>
-                  _submitData, //(_) indicated accept it but not using it
-            ),
-            TextField(
-              autocorrect: false,
-              decoration: InputDecoration(labelText: 'Amount'),
-              textInputAction: TextInputAction.done,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              controller: _amountController,
-              onSubmitted: (_) =>
-                  _submitData, //(_) indicated accept it but not using it
-            ),
-            SizedBox(
-              height: 8.0,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(_selectedDate == null
-                      ? 'No Date Chosen !'
-                      : "Picked Date:\n${DateFormat.yMMMEd().format(_selectedDate!)}"),
-                ),
-                SizedBox(
-                  width: 4.0,
-                ),
-                TextButton(
-                  onPressed: _presentDatePicker,
-                  child: Text(
-                    'Choose Date',
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColorDark,
-                        fontWeight: FontWeight.bold),
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 4.0,
+        child: Container(
+          padding: EdgeInsets.only(
+              top: 10.0,
+              left: 10.0,
+              right: 10.0,
+              bottom: MediaQuery.of(context).viewInsets.bottom * 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              TextField(
+                autocorrect: false,
+                decoration: InputDecoration(labelText: 'Title'),
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.text,
+                controller: _titleController,
+                onSubmitted: (_) =>
+                    _submitData, //(_) indicated accept it but not using it
+              ),
+              TextField(
+                autocorrect: false,
+                decoration: InputDecoration(labelText: 'Amount'),
+                textInputAction: TextInputAction.done,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                controller: _amountController,
+                onSubmitted: (_) =>
+                    _submitData, //(_) indicated accept it but not using it
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(_selectedDate == null
+                        ? 'No Date Chosen !'
+                        : "Picked Date:\n${DateFormat.yMMMEd().format(_selectedDate!)}"),
                   ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 14.0,
-            ),
-            ElevatedButton(
-              onPressed: _submitData,
-              child: Text('Add Transcation'),
-            ),
-          ],
+                  SizedBox(
+                    width: 4.0,
+                  ),
+                  TextButton(
+                    onPressed: _presentDatePicker,
+                    child: Text(
+                      'Choose Date',
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColorDark,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 14.0,
+              ),
+              ElevatedButton(
+                onPressed: _submitData,
+                child: Text('Add Transcation'),
+              ),
+            ],
+          ),
         ),
       ),
     );
