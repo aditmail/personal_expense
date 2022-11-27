@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:personal_expense/widget/charts.dart';
 import 'package:personal_expense/widget/new_transaction.dart';
 import 'package:personal_expense/widget/transaction_list.dart';
@@ -6,6 +7,11 @@ import 'package:personal_expense/widget/transaction_list.dart';
 import 'models/transaction.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(MyApp());
 }
 
@@ -121,12 +127,14 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Container(
                 height: (MediaQuery.of(context).size.height -
-                        appBar.preferredSize.height - MediaQuery.of(context).padding.top) *
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
                     0.3,
                 child: Chart(_recentTransactions)),
             Container(
                 height: (MediaQuery.of(context).size.height -
-                        appBar.preferredSize.height - MediaQuery.of(context).padding.top) *
+                        appBar.preferredSize.height -
+                        MediaQuery.of(context).padding.top) *
                     0.7,
                 child: TransactionList(_userTranscation, _deleteTranscation))
           ],
