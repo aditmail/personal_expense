@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:personal_expense/widget/charts.dart';
 import 'package:personal_expense/widget/new_transaction.dart';
 import 'package:personal_expense/widget/transaction_list.dart';
+import 'package:flutter/foundation.dart';
 
 import 'models/transaction.dart';
 
@@ -126,7 +127,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appBar,
-      floatingActionButton: Platform.isIOS
+      //floatingActionButton: Platform.isIOS
+      floatingActionButton: defaultTargetPlatform == TargetPlatform.iOS
           ? Container()
           : FloatingActionButton(
               child: Icon(Icons.add),
@@ -178,6 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+//TODO:
 //Notes for Error in Setup Platform Beside WEB
 //https://stackoverflow.com/questions/71249485/flutter-web-is-giving-error-about-unsupported-operation-platform-operatingsyst
 
