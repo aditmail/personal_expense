@@ -139,7 +139,8 @@ class _MyHomePageState extends State<MyHomePage> {
             0.7,
         child: TransactionList(_userTranscation, _deleteTranscation));
 
-    final pageBodyAndroid = SingleChildScrollView(
+    final pageBody = SafeArea(
+        child: SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -178,11 +179,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 : txListWidget
         ],
       ),
-    );
+    ));
 
     return defaultTargetPlatform == TargetPlatform.iOS
         ? CupertinoPageScaffold(
-            child: pageBodyAndroid,
+            child: pageBody,
             navigationBar: appBar,
           )
         : Scaffold(
@@ -197,7 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.miniCenterFloat,
-            body: pageBodyAndroid,
+            body: pageBody,
           );
   }
 }
