@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 
 class NewTransaction extends StatefulWidget {
   //String? _titleInput, _amountInput;
@@ -99,15 +101,24 @@ class _NewTransactionState extends State<NewTransaction> {
                   SizedBox(
                     width: 4.0,
                   ),
-                  TextButton(
-                    onPressed: _presentDatePicker,
-                    child: Text(
-                      'Choose Date',
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColorDark,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  )
+                  defaultTargetPlatform == TargetPlatform.iOS
+                      ? CupertinoButton(
+                          onPressed: _presentDatePicker,
+                          child: Text(
+                            'Choose Date',
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColorDark,
+                                fontWeight: FontWeight.bold),
+                          ))
+                      : TextButton(
+                          onPressed: _presentDatePicker,
+                          child: Text(
+                            'Choose Date',
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColorDark,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        )
                 ],
               ),
               SizedBox(
