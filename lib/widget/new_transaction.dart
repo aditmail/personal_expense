@@ -1,7 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/cupertino.dart';
+
+import '../widget/adaptive_button.dart';
 
 class NewTransaction extends StatefulWidget {
   //String? _titleInput, _amountInput;
@@ -37,7 +38,7 @@ class _NewTransactionState extends State<NewTransaction> {
     Navigator.of(context).pop();
   }
 
-  void _presentDatePicker() {
+  Future<void> _presentDatePicker() async {
     showDatePicker(
             context: context,
             initialDate: DateTime.now(),
@@ -50,10 +51,9 @@ class _NewTransactionState extends State<NewTransaction> {
 
       setState(() {
         _selectedDate = value;
+        print("DATA: $_selectedDate");
       });
     });
-
-    print(_selectedDate);
   }
 
   @override
@@ -101,24 +101,7 @@ class _NewTransactionState extends State<NewTransaction> {
                   SizedBox(
                     width: 4.0,
                   ),
-                  defaultTargetPlatform == TargetPlatform.iOS
-                      ? CupertinoButton(
-                          onPressed: _presentDatePicker,
-                          child: Text(
-                            'Choose Date',
-                            style: TextStyle(
-                                color: Theme.of(context).primaryColorDark,
-                                fontWeight: FontWeight.bold),
-                          ))
-                      : TextButton(
-                          onPressed: _presentDatePicker,
-                          child: Text(
-                            'Choose Date',
-                            style: TextStyle(
-                                color: Theme.of(context).primaryColorDark,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        )
+                  AdaptiveFlatButton('Choose Date', () => _presentDatePicker())
                 ],
               ),
               SizedBox(

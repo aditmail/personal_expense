@@ -1,14 +1,14 @@
 import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/cupertino.dart';
-
 import 'package:personal_expense/widget/charts.dart';
 import 'package:personal_expense/widget/new_transaction.dart';
 import 'package:personal_expense/widget/transaction_list.dart';
 
 import 'models/transaction.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -105,20 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
-    final dynamic appBar = defaultTargetPlatform == TargetPlatform.iOS
-        ? CupertinoNavigationBar(
-            middle: Text('Expense Planner'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GestureDetector(
-                  onTap: () => _startAddNewTransaction(context),
-                  child: Icon(CupertinoIcons.add),
-                )
-              ],
-            ),
-          )
-        : AppBar(
+    final dynamic appBar = kIsWeb
+        ? AppBar(
             title: Text(
               'Expense Planner',
               style: TextStyle(fontFamily: 'OpenSans'),
@@ -130,7 +118,33 @@ class _MyHomePageState extends State<MyHomePage> {
                     Icons.add_outlined,
                   ))
             ],
-          );
+          )
+        : Platform.isIOS
+            ? CupertinoNavigationBar(
+                middle: Text('Expense Planner'),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    GestureDetector(
+                      onTap: () => _startAddNewTransaction(context),
+                      child: Icon(CupertinoIcons.add),
+                    )
+                  ],
+                ),
+              )
+            : AppBar(
+                title: Text(
+                  'Expense Planner',
+                  style: TextStyle(fontFamily: 'OpenSans'),
+                ),
+                actions: [
+                  IconButton(
+                      onPressed: () => _startAddNewTransaction(context),
+                      icon: Icon(
+                        Icons.add_outlined,
+                      ))
+                ],
+              );
 
     final txListWidget = Container(
         height: (mediaQuery.size.height -
@@ -184,25 +198,38 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     ));
 
-    return defaultTargetPlatform == TargetPlatform.iOS
-        ? CupertinoPageScaffold(
-            child: pageBody,
-            navigationBar: appBar,
-          )
-        : Scaffold(
+    return kIsWeb
+        ? Scaffold(
             backgroundColor: Colors.white,
             appBar: appBar,
             //floatingActionButton: Platform.isIOS
-            floatingActionButton: defaultTargetPlatform == TargetPlatform.iOS
-                ? Container()
-                : FloatingActionButton(
-                    child: Icon(Icons.add),
-                    onPressed: () => _startAddNewTransaction(context),
-                  ),
+            floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () => _startAddNewTransaction(context),
+            ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.miniCenterFloat,
             body: pageBody,
-          );
+          )
+        : Platform.isIOS
+            ? CupertinoPageScaffold(
+                child: pageBody,
+                navigationBar: appBar,
+              )
+            : Scaffold(
+                backgroundColor: Colors.white,
+                appBar: appBar,
+                //floatingActionButton: Platform.isIOS
+                floatingActionButton: Platform.isIOS
+                    ? Container()
+                    : FloatingActionButton(
+                        child: Icon(Icons.add),
+                        onPressed: () => _startAddNewTransaction(context),
+                      ),
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.miniCenterFloat,
+                body: pageBody,
+              );
   }
 }
 
