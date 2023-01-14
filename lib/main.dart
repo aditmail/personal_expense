@@ -58,7 +58,7 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   final List<Transaction> _userTranscation = [
     /*Transaction(
         id: '1', title: 'New Shoes', amount: 10.15, dateTime: DateTime.now()),
@@ -67,6 +67,23 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   bool _isShowChart = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('State:: ${state}');
+  }
+
+  @override
+  dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   List<Transaction> get _recentTransactions {
     return _userTranscation.where((trx) {
@@ -149,13 +166,8 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
   }
 
-  @override
-  Widget build(BuildContext context) {
-    print('build:: MyHomePage()');
-
-    final mediaQuery = MediaQuery.of(context);
-    final isLandscape = mediaQuery.orientation == Orientation.landscape;
-    final dynamic appBar = kIsWeb
+  Widget _buildAppBar() {
+    return kIsWeb
         ? AppBar(
             title: Text(
               'Expense Planner',
@@ -195,6 +207,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       ))
                 ],
               );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print('build:: MyHomePage()');
+
+    final mediaQuery = MediaQuery.of(context);
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
+    final dynamic appBar = _buildAppBar();
 
     final txListWidget = Container(
         height: (mediaQuery.size.height -
