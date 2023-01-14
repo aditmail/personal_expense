@@ -13,6 +13,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
+    /*DeviceOrientation.landscapeRight,
+    DeviceOrientation.landscapeLeft,*/
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
@@ -24,6 +26,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('build:: MyApp()');
+
     return MaterialApp(
       title: 'Expense Planner',
       theme: ThemeData(
@@ -101,8 +105,54 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  List<Widget> _buildLandscapeContent(
+      MediaQueryData mediaQuery, AppBar appBar, Widget txListWidget) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Show Chart',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          Switch.adaptive(
+              activeColor: Theme.of(context).accentColor,
+              value: _isShowChart,
+              onChanged: (val) {
+                setState(() {
+                  _isShowChart = val;
+                });
+              }),
+        ],
+      ),
+      _isShowChart
+          ? Container(
+              height: (mediaQuery.size.height -
+                      appBar.preferredSize.height -
+                      mediaQuery.padding.top) *
+                  0.7,
+              child: Chart(_recentTransactions))
+          : txListWidget
+    ];
+  }
+
+  List<Widget> _buildPotraitContent(
+      MediaQueryData mediaQuery, AppBar appBar, Widget txListWidget) {
+    return [
+      Container(
+          height: (mediaQuery.size.height -
+                  appBar.preferredSize.height -
+                  mediaQuery.padding.top) *
+              0.3,
+          child: Chart(_recentTransactions)),
+      txListWidget
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
+    print('build:: MyHomePage()');
+
     final mediaQuery = MediaQuery.of(context);
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
     final dynamic appBar = kIsWeb
@@ -160,40 +210,9 @@ class _MyHomePageState extends State<MyHomePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (isLandscape)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Show Chart',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                Switch.adaptive(
-                    activeColor: Theme.of(context).accentColor,
-                    value: _isShowChart,
-                    onChanged: (val) {
-                      setState(() {
-                        _isShowChart = val;
-                      });
-                    }),
-              ],
-            ),
+            ..._buildLandscapeContent(mediaQuery, appBar, txListWidget),
           if (!isLandscape)
-            Container(
-                height: (mediaQuery.size.height -
-                        appBar.preferredSize.height -
-                        mediaQuery.padding.top) *
-                    0.3,
-                child: Chart(_recentTransactions)),
-          if (!isLandscape) txListWidget,
-          if (isLandscape)
-            _isShowChart
-                ? Container(
-                    height: (mediaQuery.size.height -
-                            appBar.preferredSize.height -
-                            mediaQuery.padding.top) *
-                        0.7,
-                    child: Chart(_recentTransactions))
-                : txListWidget
+            ..._buildPotraitContent(mediaQuery, appBar, txListWidget),
         ],
       ),
     ));
